@@ -1,0 +1,7 @@
+lib/
+secrets/
+dist/
+node_modules/
+assets/
+profile-3d-contrib/
+*.md
