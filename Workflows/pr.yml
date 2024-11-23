@@ -1,0 +1,38 @@
+name: 🤖 Automated Pull Request
+
+on:
+  push:
+    branches-ignore:
+      - 'main'
+      - 'master'
+      - 'old'
+      - '**-2024'
+      - '**-2023'
+      - 'release-**'
+  workflow_dispatch:
+
+jobs:
+  create_pr:
+    name: Create Pull Request
+    runs-on: ubuntu-latest
+    if: ${{ github.actor != 'dependabot[bot]' && github.event.pusher.name != 'dependabot[bot]' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create or Update Pull Request
+        id: create-pr
+        uses: offensive-vk/auto-pr-action@master
+        with:
+          github_token: ${{ secrets.BOT_TOKEN }}
+          destination_branch: 'master'
+          title:
+            '🐹 Hamster - (${{ github.event.head_commit.message }})'
+          body: 'Please Wait.... Hamster is working really hard here.'
+          reviewer: 'offensive-vk'
+          label: 'hamster,pull-request'
+          assignee: 'TheHamsterBot'
+          draft: false
+
+      - name: Save PR Number in ENV
+        run:
+          echo "NUMBER=${{ steps.create-pr.outputs.number }}" >> $GITHUB_ENV;
