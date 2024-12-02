@@ -1,0 +1,61 @@
+name: 🤖 Automated Pull Request - Hamster 🐹
+
+on:
+  workflow_call:
+    inputs:
+        assignee: 
+            required: false
+            type: string
+            default: 'TheHamsterBot'
+            description: "The Assignee for Pull Request."
+        branch: 
+          required: true
+          type: string
+          default: 'master'
+          description: "The Destination Branch for Pull Request."
+
+jobs:
+  create_pr:
+    name: Create Pull Request
+    runs-on: ubuntu-latest
+    if: ${{ github.actor != 'dependabot[bot]' && github.event.pusher.name != 'dependabot[bot]' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate Timestamp
+        run: |
+          timestamp=$(date '+%b %d, %A %I:%M:%S %p') >> $GITHUB_ENV
+
+      - name: Create Pull Request
+        id: create-pr
+        uses: offensive-vk/auto-pr-action@master
+        with:
+          repo-token: ${{ secrets.BOT_TOKEN }}
+          reviewers: 'offensive-vk'
+          labels: 'hamster,pull-request'
+          assignees: ${{ github.event.inputs.assignee || 'TheHamsterBot' }}
+          draft: false
+          debug: true
+          allow-empty: false
+          destination_branch: ${{ github.event.inputs.branch || 'master' }}
+          title:
+            '🐹 Hamster - (${{ github.event.head_commit.message }})'
+          body: |
+            ## This Pull Request Was Automated by [Hamster [bot]](https://github.com/TheHamsterBot)
+
+            > [!NOTE]
+            > Workflow Trigger: ${{ github.event_name }} event at ${{ github.event.ref }}
+            > Details of Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            - Author: @TheHamsterBot
+            - Branch: master (base) / ${{ github.ref_name }} (head)
+            - Commit: ${{ github.sha }}
+            - Workflow Path: ${{ github.workflow_ref }}
+            - Pusher Details: ${{ github.event.pusher.name }} - ${{ github.event.pusher.email }}
+            - Most Recent Commit: ${{ github.event.head_commit.message }}
+
+            ---
+
+            Thanks.
+            ${{ env.timestamp }}
+            Your Hamster 🐹 <code>PF78VAPPKLZ2</code>
