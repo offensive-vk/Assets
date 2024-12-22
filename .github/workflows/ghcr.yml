@@ -3,27 +3,29 @@ name: GHCR
 on:
   workflow_call:
     secrets:
-        token:
-            required: false
+      token:
+        required: true
+        description: GitHub Token for authentication to GHCR.
     inputs:
-        author:
-            type: string
-            required: false
-            description: Author or Vendor Name for Image.
-        title:
-            type: string
-            required: true
-            description: The Docker Image Title for the Container Image.
-        description:
-            type: string
-            required: true
-            description: The Docker Image Description for the Container Image.
+      author:
+        default: "offensive-vk"
+        type: string
+        required: false
+        description: Author or Vendor Name for Image.
+      title:
+        type: string
+        required: true
+        description: The Docker Image Title for the Container Image.
+      description:
+        type: string
+        required: true
+        description: The Docker Image Description for the Container Image.
 
 env:
   USERNAME: ${{ github.repository_owner }}
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+  PASSWORD: ${{ secrets.token }}
   
 jobs:
   deploy:
@@ -31,7 +33,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-      
+
     name: Deploy
     steps:
       - name: Checkout Repository
@@ -56,7 +58,6 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=ref,event=pr
             type=edge
             latest
             ${{ github.ref_name }}
@@ -67,8 +68,8 @@ jobs:
 
       - name: Verify Tags and Labels
         run: |
-          echo "## Summary - GHCR " >> $GITHUB_STEP_SUMMARY
-          echo "${{ steps.meta.outputs.labels }} " >> $GITHUB_STEP_SUMMARY
+          echo "## Summary - GHCR" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.meta.outputs.labels }}" >> $GITHUB_STEP_SUMMARY
 
       - name: Build and Push Image
         id: build-and-push
@@ -78,4 +79,4 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64,linux/arm64,linux/amd64/v2,linux/amd64/v3
