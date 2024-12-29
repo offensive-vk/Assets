@@ -1,0 +1,169 @@
+name: 🌨️ Publish Multi Platform Docker Images
+
+on:
+  workflow_call:
+    inputs:
+        title: 
+            type: string
+            required: false
+        author:
+            type: string
+            required: false
+        docker_user:
+            type: string
+            required: false
+            description: Dockerhub Username
+        github_user:
+            type: string
+            required: false
+            description: Github Username
+        gitlab_user:
+            type: string
+            required: false
+            description: Gitlab Username
+        to_docker:
+            type: boolean
+            required: false
+            default: true
+            description: Publish to Dockerhub Registry.
+        to_ghcr:
+            type: boolean
+            required: false
+            default: false
+            description: Publish to GHCR Registry.
+        to_glcr:
+            type: boolean
+            required: false
+            default: false
+            description: Publish to GLCR Registry.
+    secrets:
+        docker_token:
+            required: false
+        gitlab_token:
+            required: false
+        github_token:
+            required: false
+  schedule:
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOCKER: docker.io
+  GITHUB: ghcr.io
+  GITLAB: registry.gitlab.com
+  DOCKERFILE: Dockerfile
+  DEVCONTAINER: devcontainer
+  MULTI_ARCH: true
+  OWNER: ${{ github.repository_owner }}
+  GLCR: ${{ secrets.GLCR_SLUG }}
+  GHCR: ${{ secrets.GHCR_SLUG }}
+  DOCKERHUB: ${{ secrets.DOCKER_USER }}/${{secrets.DOCKER_USER }}
+  USERNAME: ${{ secrets.DOCKER_USER }}
+  PASSWORD: ${{ secrets.docker_token }}
+  GLCR_PASSWORD: ${{ secrets.gitlab_token }}
+  GHCR_PASSWORD: ${{ secrets.github_token }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Publish Images
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      statuses: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@6524bf65af31da8d45b59e8c27de4bd072b392f5 # v3.0.0
+
+      - name: Extract Docker Metadata
+        id: meta
+        uses: docker/metadata-action@70b2cdc6480c1a8b86edf1777157f8f437de2166 # v5.0.0
+        with:
+          images: |
+            ${{ env.DOCKERHUB }}
+            ${{ env.GHCR }}
+            ${{ env.GLCR }}
+          tags: |
+            type=edge
+          flavor: |
+            latest=true
+          labels: |
+            org.opencontainers.image.title=${{ inputs.title }}
+            org.opencontainers.image.vendor=${{ inputs.author }}
+            org.opencontainers.image.source=null
+
+      - name: Install Cosign
+        if: github.event_name != 'pull_request'
+        uses: sigstore/cosign-installer@dc72c7d5c4d10cd6bcb8cf6e3fd625a9e5e537da #v3.7.0
+        with:
+          cosign-release: 'v2.1.1'
+
+      - name: Login to Dockerhub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@3b8fed7e4b60203b2aa0ecc6c6d6d91d12c06760 # v3.0.0
+        with:
+          registry: ${{ env.DOCKER }}
+          username: ${{ env.USERNAME }}
+          password: ${{ env.PASSWORD }}
+
+      - name: Login to Gitlab Container Registry
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@3b8fed7e4b60203b2aa0ecc6c6d6d91d12c06760 # v3.0.0
+        with:
+          registry: ${{ env.GITLAB }}
+          username: ${{ env.OWNER }}
+          password: ${{ env.GLCR_PASSWORD }}
+
+      - name: Login to Github Container Registry
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.GITHUB }}
+          username: ${{ env.OWNER }}
+          password: ${{ env.GHCR_PASSWORD }}
+
+      - name: Build and Push Image
+        id: build-and-push
+        uses: docker/build-push-action@e44afff3590e1d4f93b6adc72376512edb012a7c # v5.0.0
+        with:
+          context: .
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/amd64/v2,linux/amd64/v3
+
+      - name: Check Manifests
+        if: github.event_name != 'pull_request'
+        run: |
+          docker buildx imagetools inspect ${{ env.DOCKERHUB }}:${{ steps.meta.outputs.version }}
+          docker buildx imagetools inspect ${{ env.GHCR }}:${{ steps.meta.outputs.version }}
+          docker buildx imagetools inspect ${{ env.GLCR }}:${{ steps.meta.outputs.version }}
+
+      - name: Inspect Images
+        if: github.event_name != 'pull_request'
+        run: |
+          docker pull ${{ env.DOCKERHUB }}:${{ steps.meta.outputs.version }}
+          docker image inspect ${{ env.DOCKERHUB }}:${{ steps.meta.outputs.version }}
+          docker pull ${{ env.GHCR }}:${{ steps.meta.outputs.version }}
+          docker image inspect ${{ env.GHCR }}:${{ steps.meta.outputs.version }}
+          docker pull ${{ env.GLCR }}:${{ steps.meta.outputs.version }}
+          docker image inspect ${{ env.GLCR }}:${{ steps.meta.outputs.version }}
+
+      - name: Verify Tags and Labels
+        run: |
+          echo -e "\n \t *** VERIFICATION STARTED ***"
+          echo "## Docker Publish Summary " >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.meta.outputs.labels }} " >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
