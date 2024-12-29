@@ -2,9 +2,12 @@ name: 🤖 Automated Issue
 
 on:
   workflow_call:
+    secrets:
+      token:
+        required: true
     inputs:
         assignee: 
-            required: true
+            required: false
             type: string
             default: 'TheHamsterBot'
             description: "The Assignee for Issue."
@@ -40,7 +43,6 @@ jobs:
             $timestamp
             Your Hamster 🐹 <code>PF78VAPPKLZ2</code>
           EOF)
-          echo "$markdown" > .github/Auto_Issue_Request.md
           echo "MARKDOWN_CONTENT<<EOF" >> $GITHUB_ENV
           echo "$markdown" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
@@ -48,10 +50,10 @@ jobs:
       - name: Create Dynamic Issue
         uses: offensive-vk/auto-issue@master
         with:
-          github-token: ${{ secrets.BOT_TOKEN }}
+          github-token: ${{ secrets.token || secrets.BOT_TOKEN }}
           title: |
             ${{ github.workflow }} - ${{ github.head_ref }}
-          assignees: ${{ inputs.assignee || ' TheHamsterBot' }}
+          assignees: ${{ inputs.assignee }}
           labels: automated,hamster
           body: |
             ${{ env.MARKDOWN_CONTENT }}

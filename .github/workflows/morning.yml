@@ -3,7 +3,8 @@ name: 🌅 Morning Maintenance
 on:
   workflow_call:
     secrets:
-        BOT_TOKEN:
+        token:
+          description: 'Authentication Token to Commit Changes.'
           required: false
     inputs:
         sign:
@@ -96,4 +97,4 @@ jobs:
           git commit -m "🌅 Morning Greeting: Rise and Shine! ☀️"
           git push
         env:
-          GITHUB_TOKEN: ${{ secrets.BOT_TOKEN || secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.token || secrets.GITHUB_TOKEN }}

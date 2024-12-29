@@ -2,17 +2,34 @@ name: 🤖 Automated Pull Request - Hamster 🐹
 
 on:
   workflow_call:
+    secrets:
+      token:
+        required: true
+        description: 'Authentication Token.'
     inputs:
+        title:
+            required: false
+            type: string
+            description: 'The Title for Automated PR.'
+        reviewer: 
+            required: false
+            type: string
+            default: 'offensive-vk'
+            description: "The Reviewer for Pull Request."
         assignee: 
             required: false
             type: string
             default: 'TheHamsterBot'
             description: "The Assignee for Pull Request."
-        branch: 
-          required: true
-          type: string
-          default: 'master'
-          description: "The Destination Branch for Pull Request."
+        dest-branch: 
+            required: true
+            type: string
+            default: 'master'
+            description: "The Destination Branch for Pull Request."
+        source-branch: 
+            required: false
+            type: string
+            description: "The Source Branch for Pull Request."
 
 jobs:
   create_pr:
@@ -30,16 +47,17 @@ jobs:
         id: create-pr
         uses: offensive-vk/auto-pr-action@master
         with:
-          repo-token: ${{ secrets.BOT_TOKEN }}
+          repo-token: ${{ secrets.token || secrets.BOT_TOKEN }}
           reviewers: 'offensive-vk'
           labels: 'hamster,pull-request'
-          assignees: ${{ github.event.inputs.assignee || 'TheHamsterBot' }}
+          assignees: ${{ github.event.inputs.assignee }}
           draft: false
           debug: true
           allow-empty: false
+          source_branch: ${{ github.event.inputs.source-branch }}
           destination_branch: ${{ github.event.inputs.branch || 'master' }}
           title:
-            '🐹 Hamster - (${{ github.event.head_commit.message }})'
+            ${{ github.event.inputs.title || '🐹 Hamster - (${{ github.event.head_commit.message }})' }}
           body: |
             ## This Pull Request Was Automated by [Hamster [bot]](https://github.com/TheHamsterBot)
 

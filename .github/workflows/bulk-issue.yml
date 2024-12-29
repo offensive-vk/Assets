@@ -3,7 +3,7 @@ name: Automated Bulk Issue Creator
 on:
   workflow_call:
     secrets:
-      TOKEN: 
+      token: 
         required: false
     inputs:
       issue_count:

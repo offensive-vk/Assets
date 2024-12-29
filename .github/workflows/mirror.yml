@@ -3,15 +3,15 @@ name: Mirror Sync
 on:
   workflow_call:
     inputs:
-      TARGET_URL:
+      target_url:
         type: string
         required: true
         description: Target URL
-      TARGET_USER:
+      target_user:
         type: string
         required: true
         description: Target Username
-      TARGET_TOKEN:
+      target_token:
         type: string
         required: true
         description: Target Token
@@ -27,6 +27,6 @@ jobs:
 
       - uses: offensive-vk/auto-repo-sync@master
         with:
-          target-url: ${{ inputs.TARGET_URL }}
-          target-username: ${{ inputs.TARGET_USER }}
-          target-token: ${{ inputs.TARGET_TOKEN }}
+          target-url: ${{ inputs.target_url }}
+          target-username: ${{ inputs.target_user }}
+          target-token: ${{ inputs.target_token }}

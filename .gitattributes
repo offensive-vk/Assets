@@ -7,9 +7,6 @@
 *.yaml linguist-language=YAML
 *.yaml linguist-detectable=true
 *.yaml linguist-documentation=false
-*.md linguist-language=Markdown
-*.md linguist-detectable=true
-*.md linguist-documentation=false
 *.svg linguist-detectable=false
 *.gif linguist-language=Binary
 *.svg linguist-language=Markdown
