@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     name: Sync
     steps:
+      - name: Setup
+        uses: actions/checkout@v4
+        
       - name: Clone Upstream Repository
         run: |
           git clone --mirror https://github.com/kamranahmedse/developer-roadmap.git upstream
