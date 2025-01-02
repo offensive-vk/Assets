@@ -1,0 +1,23 @@
+name: Roadmap.sh Mirror 
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    name: Sync
+    steps:
+      - name: Clone Upstream Repository
+        run: |
+          git clone --mirror https://github.com/kamranahmedse/developer-roadmap.git upstream
+          cd upstream
+          
+      - name: Sync
+        uses: offensive-vk/auto-repo-sync@master
+        with:
+          target-url: https://github.com/offensive-vk/Roadmap.sh.git
+          target-username: TheHamsterBot
+          target-token: ${{ secrets.BOT_TOKEN }}
