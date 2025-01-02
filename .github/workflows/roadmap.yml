@@ -21,4 +21,4 @@ jobs:
       - name: Push to Mirror
         run: |
           git remote set-url origin https://${{ secrets.BOT_TOKEN }}@github.com/offensive-vk/Roadmap.sh.git
-          git push --mirror --all --verbose
+          git push --all --verbose
