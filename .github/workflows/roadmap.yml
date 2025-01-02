@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Setup
         uses: actions/checkout@v4
-        
+
       - name: Clone Upstream Repository
         run: |
           git clone --mirror https://github.com/kamranahmedse/developer-roadmap.git upstream
@@ -21,14 +21,14 @@ jobs:
       - name: Sync
         uses: offensive-vk/auto-repo-sync@master
         with:
-          target-url: https://github.com/offensive-vk/Roadmap.sh.git
+          target-url: https://github.com/offensive-vk/Roadmap.sh
           target-username: TheHamsterBot
           target-token: ${{ secrets.BOT_TOKEN }}
 
       - name: Sync
         uses: offensive-vk/auto-repo-sync@master
         with:
-          target-url: https://gitlab.com/offensive-vk/Roadmap.sh.git
+          target-url: https://gitlab.com/offensive-vk/Roadmap.sh
           target-username: offensive-vk
           target-token: ${{ secrets.GITLAB_TOKEN }}
   
