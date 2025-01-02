@@ -41,8 +41,7 @@ on:
             required: false
         gitlab_token:
             required: false
-        github_token:
-            required: false
+
   schedule:
     - cron: '0 0 * * 0'
   workflow_dispatch:

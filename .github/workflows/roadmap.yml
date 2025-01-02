@@ -1,4 +1,4 @@
-name: Roadmap.sh Mirror 
+name: 🚀 Roadmap.sh Mirror 
 
 on:
   schedule:
@@ -21,3 +21,11 @@ jobs:
           target-url: https://github.com/offensive-vk/Roadmap.sh.git
           target-username: TheHamsterBot
           target-token: ${{ secrets.BOT_TOKEN }}
+
+      - name: Sync
+        uses: offensive-vk/auto-repo-sync@master
+        with:
+          target-url: https://gitlab.com/offensive-vk/Roadmap.sh.git
+          target-username: offensive-vk
+          target-token: ${{ secrets.GITLAB_TOKEN }}
+  

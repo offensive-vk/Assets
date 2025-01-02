@@ -1,4 +1,4 @@
-name: Mirror Sync
+name: ⚡ Mirror Sync
 
 on:
   workflow_call:

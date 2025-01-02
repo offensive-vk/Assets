@@ -1,4 +1,4 @@
-name: GHCR
+name: 🤖 GHCR
 
 on:
   workflow_call:
