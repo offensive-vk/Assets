@@ -15,6 +15,8 @@ jobs:
         run: |
           git clone https://github.com/kamranahmedse/developer-roadmap.git target
           cd target 
+          git log HEAD
+          git pull --verbose --all
 
       - name: Sync to Gitlab
         uses: offensive-vk/auto-repo-sync@v7
