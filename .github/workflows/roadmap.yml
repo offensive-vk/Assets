@@ -20,7 +20,7 @@ jobs:
 
       - name: Sync to Repos
         run: |
-            git remote add github https://${{ secrets.BOT_TOKEN }}github.com/offensive-vk/Roadmap.sh.git
-            git remote add gitlab https://${{ secrets.GITLAB_TOKEN }}gitlab.com/offensive-vk/Roadmap.sh.git
+            git remote add github https://${{ secrets.BOT_TOKEN }}@github.com/offensive-vk/Roadmap.sh
+            git remote add gitlab https://${{ secrets.GITLAB_TOKEN }}@gitlab.com/offensive-vk/Roadmap.sh
             git push -u gitlab --all --force-with-lease
             git push -u github --all --force-with-lease
