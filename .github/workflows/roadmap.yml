@@ -15,12 +15,11 @@ jobs:
         run: |
           git clone https://github.com/kamranahmedse/developer-roadmap.git target
           cd target 
-          git log HEAD
-          git pull --verbose --all
 
       - name: Sync to Gitlab
-        uses: offensive-vk/auto-repo-sync@v7
-        with:
-            target-username: offensive-vk
-            target-url: https://gitlab.com/offensive-vk/Roadmap.sh
-            target-token: ${{ secrets.GITLAB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+        run: |
+            git remote add origin https//offensive-vk:${{ secrets.GITLAB_TOKEN }}gitlab.com/offensive-vk/Roadmap.sh
+            git push -u origin master --all
+
