@@ -1,0 +1,24 @@
+name: 🚀 Sync Roadmap Mirror
+
+on:
+  workflow_dispatch:
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    name: Sync
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch Upstream
+        run: |
+          git clone https://github.com/kamranahmedse/developer-roadmap.git target
+          cd target 
+
+      - name: Sync to Gitlab
+        uses: offensive-vk/auto-repo-sync@v7
+        with:
+            target-username: offensive-vk
+            target-url: https://gitlab.com/offensive-vk/Roadmap.sh
+            target-token: ${{ secrets.GITLAB_TOKEN }}
