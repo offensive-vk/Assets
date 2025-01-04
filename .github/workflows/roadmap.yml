@@ -1,6 +1,8 @@
 name: 🚀 Sync Roadmap Mirror
 
 on:
+  schedule:
+    - cron: '0 */1 * * *'
   workflow_dispatch:
 
 jobs:
@@ -16,10 +18,9 @@ jobs:
           git clone https://github.com/kamranahmedse/developer-roadmap.git target
           cd target 
 
-      - name: Sync to Gitlab
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+      - name: Sync to Repos
         run: |
-            git remote add origin https//offensive-vk:${{ secrets.GITLAB_TOKEN }}gitlab.com/offensive-vk/Roadmap.sh
-            git push -u origin master --all
-
+            git remote add github https//${{ secrets.BOT_TOKEN }}github.com/offensive-vk/Roadmap.sh
+            git remote add gitlab https//offensive-vk:${{ secrets.GITLAB_TOKEN }}gitlab.com/offensive-vk/Roadmap.sh
+            git push -u gitlab --all --force-with-lease
+            git push -u github --all --force-with-lease
