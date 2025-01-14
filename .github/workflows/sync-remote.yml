@@ -43,8 +43,8 @@ jobs:
       - name: Checkout Target Repository
         run: |
           git clone https://gitlab.com/offensive-vk/Roadmap.sh roadmap
-          cd roadmap
-                    
+          cd roadmap && git init
+
       - name: Configure Git
         run: |
           git config user.name "TheHamsterBot"
