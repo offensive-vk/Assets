@@ -41,9 +41,11 @@ jobs:
     name: Sync to Gitlab
     steps:
       - name: Checkout Target Repository
-        run: |
-          git clone https://gitlab.com/offensive-vk/Roadmap.sh roadmap
-          cd roadmap && git init
+        uses: actions/checkout@v4
+        with:
+          repository: offensive-vk/Roadmap.sh
+          token: ${{ secrets.BOT_TOKEN }}
+          ref: master
 
       - name: Configure Git
         run: |
@@ -51,7 +53,7 @@ jobs:
           git config user.email "TheHamsterBot@outlook.com"
 
       - name: Add Upstream Repository
-        run: git remote add upstream https://github.com/kamranahmedse/developer-roadmap
+        run: git remote add upstream https://github.com/offensive-vk/Roadmap.sh
 
       - name: Fetch Upstream Changes
         run: git fetch upstream
