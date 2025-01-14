@@ -1,4 +1,4 @@
-name: Sync Repository
+name: ⚡ Sync Repository
 
 on:
   schedule:
@@ -6,9 +6,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  sync:
+  gh-sync:
     runs-on: ubuntu-latest
-
+    name: Sync to Github
     steps:
       - name: Checkout Target Repository
         uses: actions/checkout@v4
@@ -35,3 +35,31 @@ jobs:
         run: git push origin master --force-with-lease
         env:
           GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN || secrets.BOT_TOKEN }}
+
+  gl-sync:
+    runs-on: ubuntu-latest
+    name: Sync to Gitlab
+    steps:
+      - name: Checkout Target Repository
+        run: |
+          git clone https://gitlab.com/offensive-vk/Roadmap.sh roadmap
+          cd roadmap
+                    
+      - name: Configure Git
+        run: |
+          git config user.name "TheHamsterBot"
+          git config user.email "TheHamsterBot@outlook.com"
+
+      - name: Add Upstream Repository
+        run: git remote add upstream https://github.com/kamranahmedse/developer-roadmap
+
+      - name: Fetch Upstream Changes
+        run: git fetch upstream
+
+      - name: Merge Changes
+        run: git merge upstream/master --no-edit
+
+      - name: Push Changes to Target Repository
+        run: git push origin master --force-with-lease
+        env:
+          GITHUB_TOKEN: ${{ secrets.BOT_GITLAB_TOKEN || secrets.BOT_TOKEN }}
