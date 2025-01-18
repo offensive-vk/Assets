@@ -32,7 +32,7 @@ jobs:
         run: git merge upstream/master --no-edit
 
       - name: Push Changes to Target Repository
-        run: git push origin master --force-with-lease --all
+        run: git push origin master --force-with-lease
         env:
           GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN || secrets.BOT_TOKEN }}
 
@@ -67,6 +67,6 @@ jobs:
         run: git merge upstream/master --no-edit
 
       - name: Push Changes to Target Repository
-        run: git push origin master --force-with-lease --all
+        run: git push origin master --force-with-lease
         env:
           GITHUB_TOKEN: ${{ secrets.GITLAB_TOKEN || secrets.BOT_GITLAB_TOKEN }}
