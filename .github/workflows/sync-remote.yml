@@ -52,7 +52,7 @@ jobs:
       - name: Configure Git
         continue-on-error: true
         run: |
-          git config --global --add safe.directory . && git init
+          git config --global --add safe.directory /github/workspace
           git config --local user.name "offensive-vk"
           git config --local user.email "superuser.ntsystems@outlook.com"
           git remote add origin https://offensive-vk:${{ secrets.GITLAB_TOKEN }}@gitlab.com/offensive-vk/Roadmap.sh
