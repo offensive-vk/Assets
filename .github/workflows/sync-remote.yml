@@ -2,7 +2,7 @@ name: ⚡ Sync Repository
 
 on:
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "0 */6 * * *"
   workflow_dispatch:
 
 jobs:
@@ -41,11 +41,13 @@ jobs:
     name: Sync to Gitlab
     steps:
       - name: Checkout Target Repository
-        uses: actions/checkout@v4
-        with:
-          repository: offensive-vk/Roadmap.sh
-          token: ${{ secrets.BOT_TOKEN }}
-          ref: master
+        env:
+          token: ${{ secrets.GITLAB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+        run: |
+          git clone --depth 0 https://gitlab.com/offensive-vk/Roadmap.sh.git roadmap
+          cd roadmap
+          ls -la
 
       - name: Configure Git
         run: |
@@ -64,4 +66,4 @@ jobs:
       - name: Push Changes to Target Repository
         run: git push origin master --force-with-lease
         env:
-          GITHUB_TOKEN: ${{ secrets.BOT_GITLAB_TOKEN || secrets.BOT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITLAB_TOKEN || secrets.BOT_TOKEN }}
