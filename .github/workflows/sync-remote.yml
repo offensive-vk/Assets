@@ -53,9 +53,9 @@ jobs:
         continue-on-error: true
         run: |
           git config --global --add safe.directory . && git init
-          git config --local user.name "TheHamsterBot"
-          git config --local user.email "TheHamsterBot@outlook.com"
-          git remote add origin https://gitlab.com/offensive-vk/Roadmap.sh.git
+          git config --local user.name "offensive-vk"
+          git config --local user.email "superuser.ntsystems@outlook.com"
+          git remote add origin https://${{ secrets.GITLAB_TOKEN }}@gitlab.com/offensive-vk/Roadmap.sh.git
 
       - name: Add Upstream Repository
         run: git remote add upstream https://github.com/offensive-vk/Roadmap.sh
