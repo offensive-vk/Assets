@@ -32,7 +32,7 @@ jobs:
         run: git merge upstream/master --no-edit
 
       - name: Push Changes to Target Repository
-        run: git push origin master --force-with-lease
+        run: git push origin master --force-with-lease --all
         env:
           GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN || secrets.BOT_TOKEN }}
 
@@ -55,7 +55,7 @@ jobs:
           git config --global --add safe.directory . && git init
           git config --local user.name "offensive-vk"
           git config --local user.email "superuser.ntsystems@outlook.com"
-          git remote add origin https://${{ secrets.GITLAB_TOKEN }}@gitlab.com/offensive-vk/Roadmap.sh.git
+          git remote add origin https://offensive-vk:${{ secrets.GITLAB_TOKEN }}@gitlab.com/offensive-vk/Roadmap.sh
 
       - name: Add Upstream Repository
         run: git remote add upstream https://github.com/offensive-vk/Roadmap.sh
@@ -67,6 +67,6 @@ jobs:
         run: git merge upstream/master --no-edit
 
       - name: Push Changes to Target Repository
-        run: git push origin master --force-with-lease
+        run: git push origin master --force-with-lease --all
         env:
           GITHUB_TOKEN: ${{ secrets.GITLAB_TOKEN || secrets.BOT_GITLAB_TOKEN }}
