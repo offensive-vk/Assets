@@ -53,12 +53,12 @@ jobs:
         continue-on-error: true
         run: |
           git config --global --add safe.directory /github/workspace && git init
-          git config --local user.name "offensive-vk"
-          git config --local user.email "superuser.ntsystems@outlook.com"
+          git config --local user.name "TheHamsterBot"
+          git config --local user.email "TheHamsterBot@outlook.com"
           git remote add origin https://offensive-vk:${{ secrets.GITLAB_TOKEN }}@gitlab.com/offensive-vk/Roadmap.sh
 
       - name: Add Upstream Repository
-        run: git remote add upstream https://github.com/offensive-vk/Roadmap.sh
+        run: git remote add upstream https://github.com/kamranahmedse/developer-roadmap
 
       - name: Fetch Upstream Changes
         run: git fetch upstream
@@ -69,4 +69,5 @@ jobs:
       - name: Push Changes to Target Repository
         run: git push origin master --force-with-lease
         env:
+          token: ${{ secrets.GITLAB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITLAB_TOKEN || secrets.BOT_GITLAB_TOKEN }}
