@@ -67,7 +67,8 @@ jobs:
         run: git merge upstream/master --no-edit
 
       - name: Push Changes to Target Repository
-        run: git push origin master --force-with-lease
-        env:
-          token: ${{ secrets.GITLAB_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITLAB_TOKEN || secrets.BOT_GITLAB_TOKEN }}
+        uses: offensive-vk/auto-repo-sync@master
+        with:
+          target-url: https://gitlab.com/offensive-vk/Roadmap.sh
+          target-username: offensive-vk
+          target-token: ${{ secrets.GITLAB_TOKEN }}
