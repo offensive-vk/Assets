@@ -54,8 +54,8 @@ jobs:
           draft: false
           debug: true
           allow-empty: false
-          source_branch: ${{ github.event.inputs.source-branch }}
-          destination_branch: ${{ github.event.inputs.branch || 'master' }}
+          source-branch: ${{ github.event.inputs.source-branch }}
+          destination-branch: ${{ github.event.inputs.branch || 'master' }}
           title:
             ${{ github.event.inputs.title || '🐹 Hamster - (${{ github.event.head_commit.message }})' }}
           body: |

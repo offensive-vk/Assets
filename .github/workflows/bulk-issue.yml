@@ -1,6 +1,8 @@
 name: ⚡ Automated Bulk Issue Creator
 
 on:
+  workflow_run:
+  workflow_dispatch:
   workflow_call:
     secrets:
       token: 
