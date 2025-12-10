@@ -1,4 +1,4 @@
-name: 🤖 Automated Pull Request - Hamster 🐹
+name: 🤖 Automated Pull Request
 
 on:
   workflow_call:
