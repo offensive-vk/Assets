@@ -1,3 +1,3 @@
 # Assets
 
-A Place to Host All of My Personal Reusable Workflows and Assets. 
+A Place to Host All of My Personal Reusable Workflows and Static Assets. 
